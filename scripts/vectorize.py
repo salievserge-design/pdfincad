@@ -159,9 +159,10 @@ else:
         pickle.dump((dark_paths, grey_paths), f)
 
 # ---------- 4. DXF ----------
-docx = ezdxf.new("R2018", setup=True)
+docx = ezdxf.new("R2000", setup=True)
 msp = docx.modelspace()
 docx.header["$INSUNITS"] = 4  # мм
+docx.header["$DWGCODEPAGE"] = "ANSI_1251"  # кириллица корректно в DWG R2000
 # ASCII-имена слоёв: DWG R2000 держит только однобайтовую кодировку
 for name, color in [("A-RASTER-UNDERLAY", 8), ("A-WALLS-FILL", 9),
                     ("A-WALLS-OUTLINE", 8), ("A-PLAN-GRAPHICS", 7)]:
@@ -216,5 +217,5 @@ docx.layers.add("SHEET-FRAME", color=1)
 msp.add_lwpolyline([(0, 0), (pw, 0), (pw, ph), (0, ph)], close=True,
                    dxfattribs={"layer": "SHEET-FRAME"})
 
-docx.saveas(OUT_DXF)
+docx.saveas(OUT_DXF, encoding="cp1251")
 print("сохранено:", OUT_DXF)
